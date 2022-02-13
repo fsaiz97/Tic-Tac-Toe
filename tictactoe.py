@@ -92,6 +92,61 @@ class Game:
         self.turn += 1
 
 
+class Player:
+    def __init__(self, name, ai=False):
+        self.name = name
+        self.isAI = ai
+        self.records = {"wins": 0, "losses": 0, "draws": 0}
+
+    def ai_pick(self):
+        import random
+
+        return [random.randint(0,2) for _ in range(2)]
+
+
+class Game:
+    def __init__(self, n, player1, player2):
+        self.board = tuple([None for _ in range(n)] for _ in range(n))
+        self.size = n
+        player1.symbol, player2.symbol = 'O', 'X'
+        self.players = (player1, player2)
+        self.turn = 0
+        self.state = "ongoing"
+
+
+    def run_turn(self):
+        # select active player's name based on turn
+        active = self.players[self.turn % 2]
+
+        if not active.isAI:
+            while True:
+                try:
+                    x, y = tuple(map(int,
+                                     input(f'({active.name}) Enter two integers between 0 and {n-1}:').split()))
+                    break
+                except ValueError:
+                    print("Error: Input must be integers." , file=sys.stderr)
+                    continue
+        else:
+            x, y = active.ai_pick()
+
+        try:
+            self.board[y][x] = active.symbol
+        except IndexError:
+            print(f"Error: Input should be between 0 and {n-1}.", file=sys.stderr)
+            continue
+
+        for line in self.board:
+            print(line)
+
+        result = check_win(self.board, possible)
+        if result != False:
+            print(f"Winner is player {result}")
+            break
+
+        self.turn += 1
+
+
 def main():
     n = 3  # board size
     human = Player(input("name = "))
