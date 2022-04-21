@@ -1,9 +1,10 @@
 import sys
 import numpy as np
+import random
 
 
 def check_line(line):
-    if np.all(np.isclose(line, line[0])):  # checks if all of the squares in the line are equal to each other
+    if np.all(np.equal(line, line[0])):  # checks if all the marks in the line are equal
         if line[0] == 0:  # since 0 represents an empty square
             return False
         elif line[0] in (1, 2):
@@ -46,29 +47,39 @@ def main():
     player_current = 1
 
     while True:  # game loop
-        while True:  # command loop
-            try:
-                command = input(f' Enter m to make a move or enter q to quit: ')
-                if command == 'm':
-                    while True:  # move input loop
-                        try:
-                            move = get_move(board_size)
-                            if game_board[move[0]][move[1]] != 0:
-                                raise ValueError("Board position already filled")
-                        except ValueError as err:
-                            print(err, file=sys.stderr)
-                        else:
-                            break
-                elif command == 'q':
-                    exit("Quitting game...")
+        if player_current == 1:
+            # code for processing human player input
+            while True:  # command loop
+                try:
+                    command = input(f' Enter m to make a move or enter q to quit: ')
+                    if command not in ['m', 'q']:
+                        raise ValueError("Invalid command")
+                except ValueError as err:
+                    print(err, file=sys.stderr)
                 else:
-                    raise ValueError("Invalid command")
-            except ValueError as err:
-                print(err, file=sys.stderr)
-            else:
-                break
+                    break
 
-        try:
+            if command == 'm':
+                while True:  # move input loop
+                    try:
+                        move = get_move(board_size)
+                        if game_board[move[0]][move[1]] != 0:
+                            raise ValueError("Board position already filled")
+                    except ValueError as err:
+                        print(err, file=sys.stderr)
+                    else:
+                        break
+            elif command == 'q':
+                exit("Quitting game...")
+
+        else:
+            # code for processing AI player input
+            while True:
+                move = (random.randrange(board_size), random.randrange(board_size))
+                if game_board[move[0]][move[1]] == 0:
+                    break
+
+        try:  # Places mark at chosen position
             game_board[move[0]][move[1]] = player_current
         except NameError as err:  # Throws error if variable move is not set
             print(err)
@@ -81,6 +92,7 @@ def main():
             print(f"Winner is player {player_current}")
             break
 
+        print("turn end")
         player_current = 2 if player_current == 1 else 1
 
 
