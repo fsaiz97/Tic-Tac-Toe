@@ -3,16 +3,12 @@ import random
 
 
 class Board:
-    """A class representing a game board"""
+    """A class representing a square game board. Empty squares are represented by a 0."""
 
-    def __init__(self, width, height=0):
-        self.width = width
-        if height != 0:
-            self.height = height
-        else:
-            self.height = width
+    def __init__(self, size):
+        self.size = size
 
-        self.state = np.zeros((self.height, self.width), dtype=int)
+        self.state = np.zeros((self.size, self.size), dtype=int)
 
     def __str__(self):
         return '\n'.join(['|'.join([str(mark) for mark in row]) for row in self.state])
@@ -49,20 +45,16 @@ def check_line(line):
 
 
 def is_win(game_board):
-    for i in range(game_board.width):
-        if check_line(game_board.state[:, i]):  # checks for completed columns
+    for i in range(game_board.size):
+        # checks for completed row or column
+        if check_line(game_board.state[:, i]) or check_line(game_board.state[i, :]):
             return True
 
-    for j in range(game_board.height):
-        if check_line(game_board.state[j, :]):  # checks for completed rows
-            return True
-
-    # need to update this to check for all diagonals with correct length or only allow square boards?
     if check_line(game_board.state.diagonal()) or check_line(np.fliplr(game_board.state).diagonal()):
         # checks for completed diagonal or anti-diagonal
         return True
 
-    return False  # if no full lines are found
+    return False  # if no complete lines are found
 
 
 def get_move():
@@ -110,7 +102,7 @@ def main():
         else:
             # code for processing AI player input
             while True:
-                move = (random.randrange(game_board.height), random.randrange(game_board.width))
+                move = (random.randrange(game_board.size), random.randrange(game_board.size))
                 if not game_board.is_occupied(move):
                     break
 
