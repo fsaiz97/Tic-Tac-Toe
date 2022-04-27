@@ -1,7 +1,9 @@
 import random
 from typing import Tuple, Any
+import itertools
 
 import numpy as np
+import numpy.typing as np_typing
 
 Coordinate = Tuple[int, int]
 
@@ -12,8 +14,7 @@ class Board:
     def __init__(self, size: int) -> None:
         """Placeholder docstring"""
         self.size: int = size
-
-        self.state: np.typing.ArrayLike = np.zeros((self.size, self.size), dtype=int)
+        self.state: np_typing.ArrayLike = np.zeros((self.size, self.size), dtype=int)
 
     def __str__(self) -> str:
         """Placeholder docstring"""
@@ -41,7 +42,40 @@ class Board:
             raise
 
 
-def check_line(line) -> bool:
+class Player:
+    """Base class for game players."""
+
+    def __init__(self, name: str, symbol: int) -> None:
+        self.name: str = name
+        self.symbol: int = symbol
+
+    # noinspection PyMethodMayBeStatic
+    def make_move(self, board_size: int) -> Coordinate:
+        return random.randrange(board_size), random.randrange(board_size)
+
+
+class PlayerHuman(Player):
+    """Class for human player who can choose a move themselves."""
+
+    def make_move(self, board_size: int) -> Coordinate:
+        try:
+            # noinspection PyTypeChecker
+            coordinate: Coordinate = tuple(map(int, input(f'Enter two integers within the bounds: ').split()))[:2]
+            # taking tuple[:1] doesn't get the second element for some reason
+            print(coordinate)
+        except ValueError as err:
+            raise ValueError("Integer inputs expected") from err
+
+        return coordinate[1] - 1, coordinate[0] - 1  # converts from human convenient coordinates to flipped index 0
+        # coordinates
+
+
+class PlayerAI(Player):
+    """Class for AI player who uses an algorithm to play."""
+    pass
+
+
+def check_line(line: np_typing.ArrayLike) -> bool:
     """Placeholder docstring"""
     if np.all(np.equal(line, line[0])):  # checks if all the marks in the line are equal
         if line[0] == 0:  # since 0 represents an empty square
@@ -52,7 +86,7 @@ def check_line(line) -> bool:
             raise ValueError("Impossible symbol on board")
 
 
-def is_win(game_board) -> bool:
+def is_win(game_board: Board) -> bool:
     """Placeholder docstring"""
     # checks for completed rows or columns
     for i in range(game_board.size):
@@ -66,30 +100,23 @@ def is_win(game_board) -> bool:
     return False  # if no complete lines are found
 
 
-def get_move() -> Coordinate:
-    """Placeholder docstring"""
-    try:
-        coordinate: Coordinate = tuple(map(int, input(f'Enter two integers within the bounds: ').split()))[:1]
-        print(coordinate)
-    except ValueError as err:
-        raise ValueError("Integer inputs expected") from err
-
-    return coordinate[1] - 1, coordinate[0] - 1  # converts from human convenient coordinates to flipped index 0
-    # coordinates
-
-
 def main() -> None:
     """Placeholder docstring"""
     board_size: int = 3
     game_board: Board = Board(board_size)
+
+    player_list = [PlayerHuman("Human", 1), PlayerAI("AI", 2)]
+    random.shuffle(player_list)
+    player_list = itertools.cycle(player_list)
+
     print("Current State:\n", game_board, sep="")
 
-    player_current: int = 1
+    player_current: Player = next(player_list)
 
     # game loop
     while True:
         # code for processing human player input
-        if player_current == 1:
+        if isinstance(player_current, PlayerHuman):
             # command loop
             while True:
                 try:
@@ -105,7 +132,7 @@ def main() -> None:
             if command == 'm':
                 while True:
                     try:
-                        move: Coordinate = get_move()
+                        move: Coordinate = player_current.make_move(game_board.size)
                     except ValueError as err:
                         print(err)
                     else:
@@ -116,12 +143,12 @@ def main() -> None:
         else:
             # code for processing AI player input
             while True:
-                move: Coordinate = (random.randrange(game_board.size), random.randrange(game_board.size))
+                move: Coordinate = player_current.make_move(game_board.size)
                 if not game_board.is_occupied(move):
                     break
 
         try:
-            game_board.place_mark(move, player_current)
+            game_board.place_mark(move, player_current.symbol)
         # Throws error if variable move is not set
         except NameError as err:
             print(err)
@@ -133,11 +160,11 @@ def main() -> None:
 
         result: bool = is_win(game_board)
         if result:
-            print(f"Winner is player {player_current}")
+            print(f"Winner is player {player_current.name}")
             break
 
         print("turn end")
-        player_current: int = 2 if player_current == 1 else 1
+        player_current: Player = next(player_list)
 
 
 if __name__ == '__main__':
