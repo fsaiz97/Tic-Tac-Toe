@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.typing as np_typing
 
-from classes import Board
+from game_classes import Board
 
 
 def check_line(line: np_typing.ArrayLike) -> bool:
