@@ -10,15 +10,23 @@ from pygame.locals import (
 
 from game_classes import *
 from game_functions import *
+from pygame_classes import Button, Grid
+from pygame_functions import draw_grid
 
 Coordinate = Tuple[int, int]
 
 
 def main() -> None:
     """Placeholder docstring"""
+
+    # game logic variables setup
     board_size: int = 3
     game_board: Board = Board(board_size)
-    # screen variables for pygame
+    player_list = [PlayerHuman("Human", 1), PlayerAI("AI", 2)]
+    random.shuffle(player_list)
+    player_list = itertools.cycle(player_list)
+
+    # pygame setup
     SCREEN_WIDTH = 600
     SCREEN_HEIGHT = 600
 
@@ -26,24 +34,24 @@ def main() -> None:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
 
-    player_list = [PlayerHuman("Human", 1), PlayerAI("AI", 2)]
-    random.shuffle(player_list)
-    player_list = itertools.cycle(player_list)
-
     # pygame initialization starts
     pygame.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     screen.fill(WHITE)
 
-    for x in range(0, SCREEN_HEIGHT, SCREEN_HEIGHT//3):
-        for y in range(0, SCREEN_WIDTH, SCREEN_WIDTH//3):
-            rect = pygame.Rect(x, y, SCREEN_HEIGHT//3, SCREEN_WIDTH//3)
-            pygame.draw.rect(screen, BLACK, rect, 1)
+    draw_grid(screen, SCREEN_HEIGHT, SCREEN_WIDTH, BLACK)
+
+    # button = Button(100, 100, pygame.Color("Red"))
+    # button.draw(screen, (SCREEN_HEIGHT//2, SCREEN_WIDTH//2))
+
+    grid = Grid(3, 3, 300, 300)
+    grid.draw(screen, (SCREEN_WIDTH - grid.image.get_width() // 2, SCREEN_HEIGHT - grid.image.get_height() // 2))
 
     pygame.display.flip()
     # pygame initialization ends
 
+    # choose between cli game loop and pygame game loop
     running = False
     runningPygame = True
 
@@ -62,8 +70,7 @@ def main() -> None:
 
             pygame.display.flip()
 
-
-    #player_current: Player = next(player_list)
+    # player_current: Player = next(player_list)
     # print("Current State:\n", game_board, sep="")
 
     # game loop
