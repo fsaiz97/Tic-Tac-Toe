@@ -1,15 +1,11 @@
 import itertools
+from typing import Tuple
+import random
 
 import pygame
-from pygame.locals import (
-    MOUSEBUTTONDOWN,
-    KEYDOWN,
-    K_ESCAPE,
-    QUIT,
-)
 
-from game_classes import *
-from game_functions import *
+from game_logic_classes import Board, Player, PlayerHuman, PlayerAI
+from game_logic_functions import is_win
 from pygame_classes import Button, Grid
 from pygame_functions import draw_grid
 
@@ -20,53 +16,49 @@ def main() -> None:
     """Placeholder docstring"""
 
     # game logic variables setup
-    board_size: int = 3
-    game_board: Board = Board(board_size)
+    game_board_size: int = 3
+    game_board: Board = Board(game_board_size)
     player_list = [PlayerHuman("Human", 1), PlayerAI("AI", 2)]
     random.shuffle(player_list)
     player_list = itertools.cycle(player_list)
 
     # pygame setup
-    SCREEN_WIDTH = 600
-    SCREEN_HEIGHT = 600
-
-    # colour variables for pygame
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
+    screen_width = 600
+    screen_height = 600
 
     # pygame initialization starts
     pygame.init()
 
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    screen.fill(WHITE)
+    screen = pygame.display.set_mode((screen_width, screen_height))
+    screen.fill(pygame.Color("White"))
 
-    draw_grid(screen, SCREEN_HEIGHT, SCREEN_WIDTH, BLACK)
+    # draw_grid(screen, screen_height, screen_width, pygame.Color("Black"))
 
     # button = Button(100, 100, pygame.Color("Red"))
-    # button.draw(screen, (SCREEN_HEIGHT//2, SCREEN_WIDTH//2))
+    # button.draw(screen, (screen_height//2, screen_width//2))
 
     grid = Grid(3, 3, 300, 300)
-    grid.draw(screen, (SCREEN_WIDTH - grid.image.get_width() // 2, SCREEN_HEIGHT - grid.image.get_height() // 2))
+    grid.draw(screen, (screen_width - grid.image.get_width() // 2, screen_height - grid.image.get_height() // 2))
 
     pygame.display.flip()
     # pygame initialization ends
 
     # choose between cli game loop and pygame game loop
     running = False
-    runningPygame = True
+    running_pygame = True
 
     # pygame loop
-    while runningPygame:
+    while running_pygame:
         for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    runningPygame = False
-            elif event.type == QUIT:
-                runningPygame = False
-            elif event.type == MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                rect = pygame.Rect(*mouse_pos, 20, 20)
-                pygame.draw.rect(screen, BLACK, rect, 1)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running_pygame = False
+            elif event.type == pygame.QUIT:
+                running_pygame = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_position = pygame.mouse.get_pos()
+                rect = pygame.Rect(*mouse_position, 20, 20)
+                pygame.draw.rect(screen, pygame.Color("Black"), rect, 1)
 
             pygame.display.flip()
 
@@ -80,46 +72,46 @@ def main() -> None:
             # command loop
             while True:
                 try:
-                    command: str = input(f' Enter m to make a move or enter q to quit: ')
-                    if command not in ['m', 'q']:
-                        raise ValueError("Invalid command")
-                except ValueError as err:
-                    print(err)
+                    player_command: str = input(f' Enter m to make a move or enter q to quit: ')
+                    if player_command not in ['m', 'q']:
+                        raise ValueError("Invalid player_command")
+                except ValueError as error:
+                    print(error)
                 else:
                     break
 
             # move input loop
-            if command == 'm':
+            if player_command == 'm':
                 while True:
                     try:
-                        move: Coordinate = player_current.make_move(game_board.size)
-                    except ValueError as err:
-                        print(err)
+                        player_move: Coordinate = player_current.make_move(game_board.size)
+                    except ValueError as error:
+                        print(error)
                     else:
                         break
-            elif command == 'q':
+            elif player_command == 'q':
                 exit("Quitting game...")
 
         else:
             # code for processing AI player input
             while True:
-                move: Coordinate = player_current.make_move(game_board.size)
-                if not game_board.is_occupied(move):
+                player_move: Coordinate = player_current.make_move(game_board.size)
+                if not game_board.is_occupied(player_move):
                     break
 
         try:
-            game_board.place_mark(move, player_current.symbol)
+            game_board.place_mark(player_move, player_current.symbol)
         # Throws error if variable move is not set
-        except NameError as err:
-            print(err)
+        except NameError as error:
+            print(error)
             exit(-1)
         except (IndexError, ValueError):
             continue
 
         print("Current State:\n", game_board, sep="")
 
-        result: bool = is_win(game_board)
-        if result:
+        game_result: bool = is_win(game_board)
+        if game_result:
             print(f"Winner is player {player_current.name}")
             running = False
 
