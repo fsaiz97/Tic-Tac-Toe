@@ -1,13 +1,19 @@
 import random
-from typing import Tuple, Any
+from typing import Any
 
 import numpy
 import numpy.typing
 
 from game_logic_constants import Tile
 
-Coordinate = Tuple[int, int]
 
+class Coordinate:
+    def __init__(self, x_position, y_position):
+        self.x = x_position
+        self.y = y_position
+
+    def __str__(self) -> str:
+        return '(' + self.x + ', ' + self.y + ')'
 
 class GameBoard:
     """A class representing a square game board. Empty squares are represented by a 0."""
@@ -23,17 +29,17 @@ class GameBoard:
 
     def is_occupied(self, coordinate: Coordinate) -> bool:
         """Placeholder docstring"""
-        return not self.board[coordinate[0]][coordinate[1]] == Tile.EMPTY
+        return not self.board[coordinate.y][coordinate.x] == Tile.EMPTY
 
     def place_symbol(self, move: Coordinate, active_symbol: Any) -> None:
         """Catches out of range input"""
         try:
             if not self.is_occupied(move):
-                self.board[move[0]][move[1]] = active_symbol
+                self.board[move.y][move.x] = active_symbol
             else:
                 raise ValueError("Position is occupied")
-        except ValueError as err:
-            print(err)
+        except ValueError as error:
+            print(error)
             raise
         except IndexError:
             print("IndexError: Move is out of bounds")
@@ -49,7 +55,7 @@ class Player:
 
     # noinspection PyMethodMayBeStatic
     def make_move(self, board_size: int) -> Coordinate:
-        return random.randrange(board_size), random.randrange(board_size)
+        return Coordinate(random.randrange(board_size), random.randrange(board_size))
 
 
 class PlayerHuman(Player):
@@ -58,13 +64,13 @@ class PlayerHuman(Player):
     def make_move(self, board_size: int) -> Coordinate:
         try:
             # noinspection PyTypeChecker
-            coordinate: Coordinate = tuple(map(int, input(f'Enter two integers within the bounds: ').split()))[:2]
+            coordinate: Coordinate = Coordinate(*tuple(map(int, input(f'Enter two integers within the bounds: ').split()))[:2])
             # taking tuple[:1] doesn't get the second element for some reason
             print(coordinate)
-        except ValueError as err:
-            raise ValueError("Integer inputs expected") from err
+        except ValueError as error:
+            raise ValueError("Integer inputs expected") from error
 
-        return coordinate[1] - 1, coordinate[0] - 1  # converts from human convenient coordinates to flipped index 0
+        return Coordinate(coordinate.x - 1, coordinate.y - 1)  # converts from human convenient coordinates to flipped index 0
         # coordinates
 
 

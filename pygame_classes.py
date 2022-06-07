@@ -17,14 +17,14 @@ class Button(pygame.sprite.Sprite):
     def update(self, mouse_presses: MouseClickStates):
         pass
 
-    def draw(self, screen, pos):
-        screen.blit(self.surface, pos)
+    def draw(self, screen, position):
+        screen.blit(self.surface, position)
 
 
 class Grid(pygame.sprite.Sprite):
     """Collects Button instances into a grid game-board"""
 
-    def __init__(self, number_of_rows, number_of_columns, pixel_height, pixel_width):
+    def __init__(self, number_of_columns, number_of_rows, pixel_width, pixel_height):
         super(Grid, self).__init__()
         self.pixel_width = pixel_width
         self.pixel_height = pixel_height
@@ -40,5 +40,5 @@ class Grid(pygame.sprite.Sprite):
                 self.button_array[row_index][column_index].draw(self.surface, (horizontal_position, vertical_position))
         self.rect = self.surface.get_rect()
 
-    def draw_to_screen(self, screen, pos):
-        screen.blit(self.surface, pos)
+    def draw_to_screen(self, screen, position):
+        screen.blit(self.surface, position)

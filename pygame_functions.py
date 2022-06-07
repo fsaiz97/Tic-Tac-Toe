@@ -1,7 +1,7 @@
 import pygame
 
 
-def draw_grid(screen, screen_height, screen_width, colour, number_of_divisions = 3):
+def draw_grid(screen, screen_width, screen_height, colour, number_of_divisions=3):
     gridlines_width = 1
 
     for vertical_position in range(0, screen_height, screen_height // number_of_divisions):
