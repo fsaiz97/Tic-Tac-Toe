@@ -10,15 +10,15 @@ class Button(pygame.sprite.Sprite):
 
     def __init__(self, pixel_width, pixel_height, colour=pygame.Color("White")):
         super(Button, self).__init__()
-        self.image = pygame.Surface((pixel_width, pixel_height))
-        self.image.fill(colour)
-        self.rect = self.image.get_rect()
+        self.surface = pygame.Surface((pixel_width, pixel_height))
+        self.surface.fill(colour)
+        self.rect = self.surface.get_rect()
 
     def update(self, mouse_presses: MouseClickStates):
         pass
 
     def draw(self, screen, pos):
-        screen.blit(self.image, pos)
+        screen.blit(self.surface, pos)
 
 
 class Grid(pygame.sprite.Sprite):
@@ -32,13 +32,13 @@ class Grid(pygame.sprite.Sprite):
         button_pixel_height = self.pixel_height // number_of_rows
         self.button_array = [[Button(button_pixel_width, button_pixel_height, pygame.Color("Red"))
                               for j in range(0, number_of_columns)] for i in range(0, number_of_rows)]
-        self.image = pygame.Surface((self.pixel_width, pixel_height))
-        self.image.fill(pygame.Color("White"))
+        self.surface = pygame.Surface((self.pixel_width, pixel_height))
+        self.surface.fill(pygame.Color("White"))
 
-        for i, x in enumerate(range(0, self.pixel_height, button_pixel_height)):
-            for j, y in enumerate(range(0, self.pixel_width, button_pixel_width)):
-                self.button_array[i][j].draw(self.image, (x, y))
-        self.rect = self.image.get_rect()
+        for row_index, vertical_position in enumerate(range(0, self.pixel_height, button_pixel_height)):
+            for column_index, horizontal_position in enumerate(range(0, self.pixel_width, button_pixel_width)):
+                self.button_array[row_index][column_index].draw(self.surface, (horizontal_position, vertical_position))
+        self.rect = self.surface.get_rect()
 
-    def draw(self, screen, pos):
-        screen.blit(self.image, pos)
+    def draw_to_screen(self, screen, pos):
+        screen.blit(self.surface, pos)

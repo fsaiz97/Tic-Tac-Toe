@@ -1,36 +1,35 @@
 import random
 from typing import Tuple, Any
 
-import numpy as np
-import numpy.typing as np_typing
+import numpy
+import numpy.typing
+
+from game_logic_constants import Tile
 
 Coordinate = Tuple[int, int]
 
 
-class Board:
+class GameBoard:
     """A class representing a square game board. Empty squares are represented by a 0."""
 
     def __init__(self, size: int) -> None:
         """Placeholder docstring"""
         self.size: int = size
-        self.state: np_typing.ArrayLike = np.zeros((self.size, self.size), dtype=int)
+        self.board: numpy.typing.ArrayLike = numpy.full((self.size, self.size), Tile.EMPTY, dtype=object)
 
     def __str__(self) -> str:
         """Placeholder docstring"""
-        return '\n'.join(['|'.join([str(mark) for mark in row]) for row in self.state])
+        return '\n'.join(['|'.join([str(mark) for mark in row]) for row in self.board])
 
     def is_occupied(self, coordinate: Coordinate) -> bool:
         """Placeholder docstring"""
-        if self.state[coordinate[0]][coordinate[1]] == 0:
-            return False
-        else:
-            return True
+        return not self.board[coordinate[0]][coordinate[1]] == Tile.EMPTY
 
-    def place_mark(self, move: Coordinate, active_mark: Any) -> None:
+    def place_symbol(self, move: Coordinate, active_symbol: Any) -> None:
         """Catches out of range input"""
         try:
             if not self.is_occupied(move):
-                self.state[move[0]][move[1]] = active_mark
+                self.board[move[0]][move[1]] = active_symbol
             else:
                 raise ValueError("Position is occupied")
         except ValueError as err:
@@ -44,9 +43,9 @@ class Board:
 class Player:
     """Base class for game players."""
 
-    def __init__(self, name: str, symbol: int) -> None:
+    def __init__(self, name: str, symbol: Tile) -> None:
         self.name: str = name
-        self.symbol: int = symbol
+        self.symbol: Tile = symbol
 
     # noinspection PyMethodMayBeStatic
     def make_move(self, board_size: int) -> Coordinate:

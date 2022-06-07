@@ -4,8 +4,9 @@ import random
 
 import pygame
 
-from game_logic_classes import Board, Player, PlayerHuman, PlayerAI
+from game_logic_classes import GameBoard, Player, PlayerHuman, PlayerAI
 from game_logic_functions import is_win
+from game_logic_constants import Tile
 from pygame_classes import Button, Grid
 from pygame_functions import draw_grid
 
@@ -17,8 +18,8 @@ def main() -> None:
 
     # game logic variables setup
     game_board_size: int = 3
-    game_board: Board = Board(game_board_size)
-    player_list = [PlayerHuman("Human", 1), PlayerAI("AI", 2)]
+    game_board: GameBoard = GameBoard(game_board_size)
+    player_list = [PlayerHuman("Human", Tile.PLAYER_1), PlayerAI("AI", Tile.PLAYER_2)]
     random.shuffle(player_list)
     player_list = itertools.cycle(player_list)
 
@@ -37,8 +38,10 @@ def main() -> None:
     # button = Button(100, 100, pygame.Color("Red"))
     # button.draw(screen, (screen_height//2, screen_width//2))
 
-    grid = Grid(3, 3, 300, 300)
-    grid.draw(screen, (screen_width - grid.image.get_width() // 2, screen_height - grid.image.get_height() // 2))
+    grid_rows = grid_columns = 3
+    grid_pixel_height = grid_pixel_width = 300
+    grid = Grid(grid_rows, grid_columns, grid_pixel_height, grid_pixel_width)
+    grid.draw_to_screen(screen, (screen_width - grid.surface.get_width() // 2, screen_height - grid.surface.get_height() // 2))
 
     pygame.display.flip()
     # pygame initialization ends
@@ -57,8 +60,10 @@ def main() -> None:
                 running_pygame = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
-                rect = pygame.Rect(*mouse_position, 20, 20)
-                pygame.draw.rect(screen, pygame.Color("Black"), rect, 1)
+                test_rect_height = test_rect_width = 20
+                rect = pygame.Rect(*mouse_position, test_rect_width, test_rect_height)
+                rect_width = 1
+                pygame.draw.rect(screen, pygame.Color("Black"), rect, rect_width)
 
             pygame.display.flip()
 
@@ -100,7 +105,7 @@ def main() -> None:
                     break
 
         try:
-            game_board.place_mark(player_move, player_current.symbol)
+            game_board.place_symbol(player_move, player_current.symbol)
         # Throws error if variable move is not set
         except NameError as error:
             print(error)
