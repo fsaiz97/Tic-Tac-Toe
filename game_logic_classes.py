@@ -15,6 +15,7 @@ class Coordinate:
     def __str__(self) -> str:
         return '(' + self.x + ', ' + self.y + ')'
 
+
 class GameBoard:
     """A class representing a square game board. Empty squares are represented by a 0."""
 
@@ -45,6 +46,23 @@ class GameBoard:
             print("IndexError: Move is out of bounds")
             raise
 
+    def get_lines(self):
+        lines = []
+        lines.extend(self.get_rows())
+        lines.extend(self.get_columns())
+        lines.extend(self.get_diagonals())
+
+        return lines
+
+    def get_rows(self):
+        return [self.board[i, :] for i in range(self.size)]
+
+    def get_columns(self):
+        return [self.board[:, i] for i in range(self.size)]
+
+    def get_diagonals(self):
+        return [self.board.diagonal(), numpy.fliplr(self.board).diagonal()]
+
 
 class Player:
     """Base class for game players."""
@@ -62,11 +80,16 @@ class PlayerHuman(Player):
     """Class for human player who can choose a move themselves."""
 
     def make_move(self, board_size: int) -> Coordinate:
+        user_input = input(f'Enter two integers within the bounds: ')
         try:
-            # noinspection PyTypeChecker
-            coordinate: Coordinate = Coordinate(*tuple(map(int, input(f'Enter two integers within the bounds: ').split()))[:2])
-            # taking tuple[:1] doesn't get the second element for some reason
-            print(coordinate)
+            if len(user_input.split()) != 2:
+                raise ValueError("Too many inputs")
+        except ValueError as error:
+            print(error)
+
+        try:
+            int_input = map(int, user_input.split())
+            coordinate: Coordinate = Coordinate(*tuple(int_input))
         except ValueError as error:
             raise ValueError("Integer inputs expected") from error
 
