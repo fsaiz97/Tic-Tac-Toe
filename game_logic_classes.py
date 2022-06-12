@@ -8,6 +8,8 @@ from game_logic_constants import Tile
 
 
 class Coordinate:
+    dimension = 2
+
     def __init__(self, x_position, y_position):
         self.x = x_position
         self.y = y_position
@@ -15,6 +17,21 @@ class Coordinate:
     def __str__(self) -> str:
         return '(' + self.x + ', ' + self.y + ')'
 
+    @staticmethod
+    def transform_one_based_indexing_to_zero_based_indexing(one_based_coordinate):
+        return Coordinate(one_based_coordinate.x - 1, one_based_coordinate.y - 1)
+
+    @staticmethod
+    def transform_string_to_coordinate(coordinate_string):
+        if len(coordinate_string.split()) != Coordinate.dimension:
+            raise ValueError("Expected " + str(Coordinate.dimension) + " inputs")
+
+        try:
+            int_input = map(int, user_input.split())
+        except ValueError as error:
+            raise ValueError("Integer inputs expected") from error
+
+        return Coordinate(*tuple(int_input))
 
 class GameBoard:
     """A class representing a square game board. Empty squares are represented by a 0."""
@@ -79,22 +96,16 @@ class Player:
 class PlayerHuman(Player):
     """Class for human player who can choose a move themselves."""
 
-    def make_move(self, board_size: int) -> Coordinate:
+    def get_move_input(self):
         user_input = input(f'Enter two integers within the bounds: ')
-        try:
-            if len(user_input.split()) != 2:
-                raise ValueError("Too many inputs")
-        except ValueError as error:
-            print(error)
+        if len(user_input.split()) != Coordinate.dimension:
+            raise ValueError("Expected " + str(Coordinate.dimension) + " inputs")
 
-        try:
-            int_input = map(int, user_input.split())
-            coordinate: Coordinate = Coordinate(*tuple(int_input))
-        except ValueError as error:
-            raise ValueError("Integer inputs expected") from error
+    def make_move(self, board_size: int) -> Coordinate:
+        user_input = self.get_move_input()
+        coordinate = Coordinate.transform_string_to_coordinate(user_input)
 
-        return Coordinate(coordinate.x - 1, coordinate.y - 1)  # converts from human convenient coordinates to flipped index 0
-        # coordinates
+        return Coordinate.transform_one_based_indexing_to_zero_based_indexing(coordinate)
 
 
 class PlayerAI(Player):
