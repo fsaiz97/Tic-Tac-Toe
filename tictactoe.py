@@ -1,6 +1,7 @@
 import itertools
 from typing import Tuple
 import random
+import sys
 
 import pygame
 
@@ -31,6 +32,7 @@ def main() -> None:
     pygame.init()
 
     screen_surface = pygame.display.set_mode((screen_width, screen_height))
+    pygame.display.set_caption("Tic-Tac-Toe")
     screen_surface.fill(pygame.Color("White"))
 
     # draw_grid(screen_surface, screen_height, screen_width, pygame.Color("Black"))
@@ -55,9 +57,11 @@ def main() -> None:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    running_pygame = False
+                    pygame.quit()
+                    sys.exit()
             elif event.type == pygame.QUIT:
-                running_pygame = False
+                pygame.quit()
+                sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
                 test_rect_height = test_rect_width = 20
