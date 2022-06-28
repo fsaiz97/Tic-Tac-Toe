@@ -35,15 +35,7 @@ def main() -> None:
     pygame.display.set_caption("Tic-Tac-Toe")
     screen_surface.fill(pygame.Color("White"))
 
-    # draw_grid(screen_surface, screen_height, screen_width, pygame.Color("Black"))
-
-    # button = Button(100, 100, pygame.Color("Red"))
-    # button.draw(screen_surface, (screen_height//2, screen_width//2))
-
-    grid_rows = grid_columns = 3
-    grid_pixel_height = grid_pixel_width = 300
-    grid = Grid(grid_columns, grid_rows, grid_pixel_width, grid_pixel_height)
-    grid.draw_to_screen(screen_surface, (screen_width - grid.surface.get_width() // 2, screen_height - grid.surface.get_height() // 2))
+    draw_grid(screen_surface, screen_height, screen_width, pygame.Color("Black"))
 
     pygame.display.flip()
     # pygame initialization ends
