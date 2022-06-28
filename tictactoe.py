@@ -25,17 +25,19 @@ def main() -> None:
     player_list = itertools.cycle(player_list)
 
     # pygame setup
-    screen_width = 600
-    screen_height = 600
+    display_width = 600
+    display_height = 600
 
     # pygame initialization starts
     pygame.init()
 
-    screen_surface = pygame.display.set_mode((screen_width, screen_height))
+    display_surface = pygame.display.set_mode((display_width, display_height))
     pygame.display.set_caption("Tic-Tac-Toe")
-    screen_surface.fill(pygame.Color("White"))
+    display_surface.fill(pygame.Color("White"))
 
-    draw_grid(screen_surface, screen_height, screen_width, pygame.Color("Black"))
+
+
+    draw_grid(display_surface, pygame.Color("Black"))
 
     pygame.display.flip()
     # pygame initialization ends
@@ -47,19 +49,16 @@ def main() -> None:
     # pygame loop
     while running_pygame:
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running_pygame = False
             elif event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                running_pygame = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
                 test_rect_height = test_rect_width = 20
                 rect = pygame.Rect(*mouse_position, test_rect_width, test_rect_height)
                 rect_outline_thickness = 1
-                pygame.draw.rect(screen_surface, pygame.Color("Black"), rect, rect_outline_thickness)
+                pygame.draw.rect(display_surface, pygame.Color("Black"), rect, rect_outline_thickness)
 
             pygame.display.flip()
 

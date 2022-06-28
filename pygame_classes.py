@@ -42,3 +42,28 @@ class Grid(pygame.sprite.Sprite):
 
     def draw_to_screen(self, screen, position):
         screen.blit(self.surface, position)
+
+
+class Tileset:
+    def __init__(self, filename, tile_pixel_dimensions, margin, spacing):
+        self.filename = filename
+        self.tile_width, self.tile_height = tile_pixel_dimensions
+        self.margin = margin
+        self.spacing = spacing
+        self.image = pygame.image.load(filename)
+        self.rect = self.image.get_rect()
+        self.load_tiles()
+
+    def load_tiles(self):
+
+        self.tiles = []
+        x_start = y_start = self.margin
+        tileset_width, tileset_height = self.rect.size
+        delta_x = self.width + self.spacing
+        delta_y = self.height + self.spacing
+
+        for x in range(x_start, tileset_width, delta_x):
+            for y in range(y_start, tileset_height, delta_y):
+                tile = pygame.Surface(self.rect.size)
+                tile.blit(self.image, (0, 0), (x, y, *self.size))
+                self.tiles.append(tile)
