@@ -59,11 +59,11 @@ class Tileset:
         self.tiles = []
         x_start = y_start = self.margin
         tileset_width, tileset_height = self.rect.size
-        delta_x = self.width + self.spacing
-        delta_y = self.height + self.spacing
+        delta_x = self.tile_width + self.spacing
+        delta_y = self.tile_height + self.spacing
 
         for x in range(x_start, tileset_width, delta_x):
             for y in range(y_start, tileset_height, delta_y):
                 tile = pygame.Surface(self.rect.size)
-                tile.blit(self.image, (0, 0), (x, y, *self.size))
+                tile.blit(self.image, (0, 0), (x, y, self.tile_width, self.tile_height))
                 self.tiles.append(tile)

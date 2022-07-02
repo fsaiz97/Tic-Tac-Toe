@@ -1,5 +1,6 @@
 import random
 from typing import Any
+import itertools
 
 import numpy
 import numpy.typing
@@ -33,6 +34,17 @@ class Coordinate:
 
         return Coordinate(*tuple(int_input))
 
+
+class Game:
+    """Represents individual game rounds, storing all information about that round."""
+
+    def __init__(self, board_size, player_1_type, player_2_type):
+        # Initializes a game board
+        self.board = GameBoard(board_size)
+        # Initializes players
+        self.player_list = [PlayerHuman("Human", 1), PlayerAI("AI", 2)]
+        random.shuffle(self.player_list)
+        player_list = itertools.cycle(self.player_list)
 
 class GameBoard:
     """A class representing a square game board. Empty squares are represented by a 0."""
