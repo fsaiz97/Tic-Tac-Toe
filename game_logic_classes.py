@@ -114,6 +114,20 @@ class PlayerHuman(Player):
 
         return Coordinate.transform_one_based_indexing_to_zero_based_indexing(coordinate)
 
+    @staticmethod
+    def get_human_command():
+        # command loop
+        while True:
+            try:
+                player_command: str = input(f' Enter m to make a move or enter q to quit: ')
+                if player_command not in ['m', 'q']:
+                    raise ValueError("Invalid player_command")
+            except ValueError as error:
+                print(error)
+            else:
+                break
+        return player_command
+
 
 class PlayerAI(Player):
     """Class for AI player who uses an algorithm to play."""
@@ -155,7 +169,7 @@ class Game:
         return player_move
 
     def get_human_move(self):
-        player_command = self.get_human_command()
+        player_command = PlayerHuman.get_human_command()
         # move input loop
         if player_command == 'm':
             while True:
@@ -168,16 +182,3 @@ class Game:
         elif player_command == 'q':
             exit("Quitting game...")
         return player_move
-
-    def get_human_command(self):
-        # command loop
-        while True:
-            try:
-                player_command: str = input(f' Enter m to make a move or enter q to quit: ')
-                if player_command not in ['m', 'q']:
-                    raise ValueError("Invalid player_command")
-            except ValueError as error:
-                print(error)
-            else:
-                break
-        return player_command
