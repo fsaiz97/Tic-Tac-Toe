@@ -2,6 +2,7 @@ import unittest
 
 from game_logic_classes import Coordinate, Game
 
+
 class TestCoordinate(unittest.TestCase):
     def test_eq_method(self):
         """Tests if Coordinates __eq__ method works as intended."""
@@ -20,18 +21,19 @@ class TestCoordinate(unittest.TestCase):
         coord_string = "a b"
 
         with self.assertRaises(ValueError):
-            coord = Coordinate.transform_string_to_coordinate(coord_string)
+            Coordinate.transform_string_to_coordinate(coord_string)
 
     def test_transform_string_to_coordinate_Wrong_dimension_Raises_TypeError(self):
         """Tests if transform_string_to_coordinate will accept a string with the wrong dimension."""
         coord_string = "1 2 3"
 
         with self.assertRaises(TypeError):
-            coord = Coordinate.transform_string_to_coordinate(coord_string)
+            Coordinate.transform_string_to_coordinate(coord_string)
 
 
 class TestGame(unittest.TestCase):
-    def test_init_
+    pass
+
 
 if __name__ == "__main__":
     unittest.main()

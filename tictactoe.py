@@ -2,7 +2,8 @@ from typing import Tuple
 
 import pygame
 
-from game_logic_classes import Game
+from game_logic_classes import Game, PlayerHuman, PlayerAI
+from game_logic_constants import Tile
 from game_logic_functions import is_win
 from pygame_functions import draw_grid
 
@@ -12,7 +13,9 @@ Coordinate = Tuple[int, int]
 def main() -> None:
     """Placeholder docstring"""
 
-    game = Game()
+    player_1 = PlayerHuman("Human", Tile.PLAYER_1)
+    player_2 = PlayerAI("AI", Tile.PLAYER_2)
+    game = Game(player_1, player_2)
 
     # pygame setup
     display_width = 600

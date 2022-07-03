@@ -31,59 +31,10 @@ class Coordinate:
     def transform_string_to_coordinate(coordinate_string):
         try:
             int_input = map(int, coordinate_string.split())
-        except ValueError as error:
+        except ValueError:
             raise
 
         return Coordinate(*tuple(int_input))
-
-
-class Game:
-    """Represents individual game rounds, storing all information about that round."""
-
-    def __init__(self):
-        # Initializes a game board
-        self.board = GameBoard(BOARD_SIZE)
-        # Initializes players
-        self.player_list = [PlayerHuman("Human", Tile.PLAYER_1), PlayerAI("AI", Tile.PLAYER_2)]
-        random.shuffle(self.player_list)
-        self.player_list = itertools.cycle(self.player_list)
-        self.player_current = self.get_next_player()
-
-    def get_next_player(self):
-        return next(self.player_list)
-
-    def get_player_move(self):
-        # code for processing human player input
-        if isinstance(self.player_current, PlayerHuman):
-            # command loop
-            while True:
-                try:
-                    player_command: str = input(f' Enter m to make a move or enter q to quit: ')
-                    if player_command not in ['m', 'q']:
-                        raise ValueError("Invalid player_command")
-                except ValueError as error:
-                    print(error)
-                else:
-                    break
-
-            # move input loop
-            if player_command == 'm':
-                while True:
-                    try:
-                        player_move: Coordinate = self.player_current.make_move()
-                    except ValueError as error:
-                        print(error)
-                    else:
-                        break
-            elif player_command == 'q':
-                exit("Quitting game...")
-        else:
-            # code for processing AI player input
-            while True:
-                player_move: Coordinate = self.player_current.make_move()
-                if not self.board.is_occupied(player_move):
-                    break
-        return player_move
 
 
 class GameBoard:
@@ -167,3 +118,55 @@ class PlayerHuman(Player):
 class PlayerAI(Player):
     """Class for AI player who uses an algorithm to play."""
     pass
+
+
+class Game:
+    """Represents individual game rounds, storing all information about that round."""
+
+    def __init__(self, player_1: Player, player_2: Player):
+        # Initializes a game board
+        self.board = GameBoard(BOARD_SIZE)
+        # Initializes players
+        self.player_list = [player_1, player_2]
+        self.player_order = self.set_player_order()
+        self.player_current = self.get_next_player()
+
+    def set_player_order(self):
+        random.shuffle(self.player_list)
+        return itertools.cycle(self.player_list)
+
+    def get_next_player(self):
+        return next(self.player_order)
+
+    def get_player_move(self):
+        # code for processing human player input
+        if isinstance(self.player_current, PlayerHuman):
+            # command loop
+            while True:
+                try:
+                    player_command: str = input(f' Enter m to make a move or enter q to quit: ')
+                    if player_command not in ['m', 'q']:
+                        raise ValueError("Invalid player_command")
+                except ValueError as error:
+                    print(error)
+                else:
+                    break
+
+            # move input loop
+            if player_command == 'm':
+                while True:
+                    try:
+                        player_move: Coordinate = self.player_current.make_move()
+                    except ValueError as error:
+                        print(error)
+                    else:
+                        break
+            elif player_command == 'q':
+                exit("Quitting game...")
+        else:
+            # code for processing AI player input
+            while True:
+                player_move: Coordinate = self.player_current.make_move()
+                if not self.board.is_occupied(player_move):
+                    break
+        return player_move
