@@ -141,32 +141,43 @@ class Game:
     def get_player_move(self):
         # code for processing human player input
         if isinstance(self.player_current, PlayerHuman):
-            # command loop
+            player_move = self.get_human_move()
+        else:
+            player_move = self.get_ai_move()
+        return player_move
+
+    def get_ai_move(self):
+        # code for processing AI player input
+        while True:
+            player_move: Coordinate = self.player_current.make_move()
+            if not self.board.is_occupied(player_move):
+                break
+        return player_move
+
+    def get_human_move(self):
+        player_command = self.get_human_command()
+        # move input loop
+        if player_command == 'm':
             while True:
                 try:
-                    player_command: str = input(f' Enter m to make a move or enter q to quit: ')
-                    if player_command not in ['m', 'q']:
-                        raise ValueError("Invalid player_command")
+                    player_move: Coordinate = self.player_current.make_move()
                 except ValueError as error:
                     print(error)
                 else:
                     break
-
-            # move input loop
-            if player_command == 'm':
-                while True:
-                    try:
-                        player_move: Coordinate = self.player_current.make_move()
-                    except ValueError as error:
-                        print(error)
-                    else:
-                        break
-            elif player_command == 'q':
-                exit("Quitting game...")
-        else:
-            # code for processing AI player input
-            while True:
-                player_move: Coordinate = self.player_current.make_move()
-                if not self.board.is_occupied(player_move):
-                    break
+        elif player_command == 'q':
+            exit("Quitting game...")
         return player_move
+
+    def get_human_command(self):
+        # command loop
+        while True:
+            try:
+                player_command: str = input(f' Enter m to make a move or enter q to quit: ')
+                if player_command not in ['m', 'q']:
+                    raise ValueError("Invalid player_command")
+            except ValueError as error:
+                print(error)
+            else:
+                break
+        return player_command
