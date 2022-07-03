@@ -18,19 +18,21 @@ class Coordinate:
     def __str__(self) -> str:
         return '(' + self.x + ', ' + self.y + ')'
 
+    def __eq__(self, other):
+        if isinstance(other, Coordinate):
+            return self.x == other.x and self.y == other.y
+        return False
+
     @staticmethod
     def transform_one_based_indexing_to_zero_based_indexing(one_based_coordinate):
         return Coordinate(one_based_coordinate.x - 1, one_based_coordinate.y - 1)
 
     @staticmethod
     def transform_string_to_coordinate(coordinate_string):
-        if len(coordinate_string.split()) != Coordinate.dimension:
-            raise ValueError("Expected " + str(Coordinate.dimension) + " inputs")
-
         try:
             int_input = map(int, coordinate_string.split())
         except ValueError as error:
-            raise ValueError("Integer inputs expected") from error
+            raise
 
         return Coordinate(*tuple(int_input))
 
@@ -38,13 +40,51 @@ class Coordinate:
 class Game:
     """Represents individual game rounds, storing all information about that round."""
 
-    def __init__(self, board_size, player_1_type, player_2_type):
+    def __init__(self, board_size=3):
         # Initializes a game board
         self.board = GameBoard(board_size)
         # Initializes players
-        self.player_list = [PlayerHuman("Human", 1), PlayerAI("AI", 2)]
+        self.player_list = [PlayerHuman("Human", Tile.PLAYER_1), PlayerAI("AI", Tile.PLAYER_2)]
         random.shuffle(self.player_list)
-        player_list = itertools.cycle(self.player_list)
+        self.player_list = itertools.cycle(self.player_list)
+        self.player_current = self.get_next_player()
+
+    def get_next_player(self):
+        return next(self.player_list)
+
+    def get_player_move(self):
+        # code for processing human player input
+        if isinstance(self.player_current, PlayerHuman):
+            # command loop
+            while True:
+                try:
+                    player_command: str = input(f' Enter m to make a move or enter q to quit: ')
+                    if player_command not in ['m', 'q']:
+                        raise ValueError("Invalid player_command")
+                except ValueError as error:
+                    print(error)
+                else:
+                    break
+
+            # move input loop
+            if player_command == 'm':
+                while True:
+                    try:
+                        player_move: Coordinate = self.player_current.make_move(self.board.size)
+                    except ValueError as error:
+                        print(error)
+                    else:
+                        break
+            elif player_command == 'q':
+                exit("Quitting game...")
+        else:
+            # code for processing AI player input
+            while True:
+                player_move: Coordinate = self.player_current.make_move(self.board.size)
+                if not self.board.is_occupied(player_move):
+                    break
+        return player_move
+
 
 class GameBoard:
     """A class representing a square game board. Empty squares are represented by a 0."""
@@ -109,10 +149,13 @@ class Player:
 class PlayerHuman(Player):
     """Class for human player who can choose a move themselves."""
 
-    def get_move_input(self):
+    @staticmethod
+    def get_move_input():
         user_input = input(f'Enter two integers within the bounds: ')
         if len(user_input.split()) != Coordinate.dimension:
             raise ValueError("Expected " + str(Coordinate.dimension) + " inputs")
+
+        return user_input
 
     def make_move(self, board_size: int) -> Coordinate:
         user_input = self.get_move_input()
