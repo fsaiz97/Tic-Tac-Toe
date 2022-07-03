@@ -5,7 +5,7 @@ import itertools
 import numpy
 import numpy.typing
 
-from game_logic_constants import Tile
+from game_logic_constants import Tile, BOARD_SIZE
 
 
 class Coordinate:
@@ -40,9 +40,9 @@ class Coordinate:
 class Game:
     """Represents individual game rounds, storing all information about that round."""
 
-    def __init__(self, board_size=3):
+    def __init__(self):
         # Initializes a game board
-        self.board = GameBoard(board_size)
+        self.board = GameBoard(BOARD_SIZE)
         # Initializes players
         self.player_list = [PlayerHuman("Human", Tile.PLAYER_1), PlayerAI("AI", Tile.PLAYER_2)]
         random.shuffle(self.player_list)
@@ -70,7 +70,7 @@ class Game:
             if player_command == 'm':
                 while True:
                     try:
-                        player_move: Coordinate = self.player_current.make_move(self.board.size)
+                        player_move: Coordinate = self.player_current.make_move()
                     except ValueError as error:
                         print(error)
                     else:
@@ -80,7 +80,7 @@ class Game:
         else:
             # code for processing AI player input
             while True:
-                player_move: Coordinate = self.player_current.make_move(self.board.size)
+                player_move: Coordinate = self.player_current.make_move()
                 if not self.board.is_occupied(player_move):
                     break
         return player_move
@@ -142,8 +142,8 @@ class Player:
         self.symbol: Tile = symbol
 
     # noinspection PyMethodMayBeStatic
-    def make_move(self, board_size: int) -> Coordinate:
-        return Coordinate(random.randrange(board_size), random.randrange(board_size))
+    def make_move(self) -> Coordinate:
+        return Coordinate(random.randrange(BOARD_SIZE), random.randrange(BOARD_SIZE))
 
 
 class PlayerHuman(Player):
@@ -157,7 +157,7 @@ class PlayerHuman(Player):
 
         return user_input
 
-    def make_move(self, board_size: int) -> Coordinate:
+    def make_move(self) -> Coordinate:
         user_input = self.get_move_input()
         coordinate = Coordinate.transform_string_to_coordinate(user_input)
 
