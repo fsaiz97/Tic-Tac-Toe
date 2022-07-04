@@ -60,12 +60,10 @@ class GameBoard:
                 self.board[move.y][move.x] = active_symbol
             else:
                 raise ValueError("Position is occupied")
-        except ValueError as error:
-            print(error)
+        except ValueError:
             raise
-        except IndexError:
-            print("IndexError: Move is out of bounds")
-            raise
+        except IndexError as error:
+            raise IndexError("IndexError: Move is out of bounds") from error
 
     def get_lines(self):
         lines = []
@@ -96,6 +94,9 @@ class Player:
     def make_move(self) -> Coordinate:
         return Coordinate(random.randrange(BOARD_SIZE), random.randrange(BOARD_SIZE))
 
+    def get_move(self):
+        return self.make_move()
+
 
 class PlayerHuman(Player):
     """Class for human player who can choose a move themselves."""
@@ -107,6 +108,21 @@ class PlayerHuman(Player):
             raise ValueError("Expected " + str(Coordinate.dimension) + " inputs")
 
         return user_input
+
+    def get_move(self):
+        player_command = PlayerHuman.get_human_command()
+        # move input loop
+        if player_command == 'm':
+            while True:
+                try:
+                    player_move: Coordinate = self.make_move()
+                except ValueError as error:
+                    print(error)
+                else:
+                    break
+        elif player_command == 'q':
+            exit("Quitting game...")
+        return player_move
 
     def make_move(self) -> Coordinate:
         user_input = self.get_move_input()
@@ -151,34 +167,3 @@ class Game:
 
     def get_next_player(self):
         return next(self.player_order)
-
-    def get_player_move(self):
-        # code for processing human player input
-        if isinstance(self.player_current, PlayerHuman):
-            player_move = self.get_human_move()
-        else:
-            player_move = self.get_ai_move()
-        return player_move
-
-    def get_ai_move(self):
-        # code for processing AI player input
-        while True:
-            player_move: Coordinate = self.player_current.make_move()
-            if not self.board.is_occupied(player_move):
-                break
-        return player_move
-
-    def get_human_move(self):
-        player_command = PlayerHuman.get_human_command()
-        # move input loop
-        if player_command == 'm':
-            while True:
-                try:
-                    player_move: Coordinate = self.player_current.make_move()
-                except ValueError as error:
-                    print(error)
-                else:
-                    break
-        elif player_command == 'q':
-            exit("Quitting game...")
-        return player_move

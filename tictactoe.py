@@ -55,7 +55,7 @@ def main() -> None:
 
     # game loop
     while running:
-        player_move = game.get_player_move()
+        player_move = game.player_current.get_move()
 
         try:
             game.board.place_symbol(player_move, game.player_current.symbol)
@@ -63,7 +63,8 @@ def main() -> None:
         except NameError as error:
             print(error)
             exit(-1)
-        except (IndexError, ValueError):
+        except (IndexError, ValueError) as error:
+            print(error)
             continue
 
         print("Current State:\n", game.board, sep="")
