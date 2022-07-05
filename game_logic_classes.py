@@ -4,6 +4,7 @@ import itertools
 
 import numpy
 import numpy.typing
+import inquirer
 
 from game_logic_constants import Tile, BOARD_SIZE
 
@@ -135,7 +136,12 @@ class PlayerHuman(Player):
         # command loop
         while True:
             try:
-                player_command: str = input(f' Enter m to make a move or enter q to quit: ')
+                question = [
+                    inquirer.List('command', message="Choose a command", choices=["Make a move", "Quit"])
+                ]
+                player_command: str = inquirer.prompt(question)
+                print(player_command)
+                exit()
                 if player_command not in ['m', 'q']:
                     raise ValueError("Invalid player_command")
             except ValueError as error:
