@@ -48,7 +48,7 @@ class GameBoard:
 
     def __str__(self) -> str:
         """Placeholder docstring"""
-        return '\n'.join(['|'.join([str(mark) for mark in row]) for row in self.board])
+        return '\n'.join(['|'.join([str(mark.value) for mark in row]) for row in self.board])
 
     def is_occupied(self, coordinate: Coordinate) -> bool:
         """Placeholder docstring"""
@@ -136,12 +136,13 @@ class PlayerHuman(Player):
         # command loop
         while True:
             try:
-                question = [
-                    inquirer.List('command', message="Choose a command", choices=["Make a move", "Quit"])
-                ]
-                player_command: str = inquirer.prompt(question)
-                print(player_command)
-                exit()
+                # question = [
+                #     inquirer.List('command', message="Choose a command", choices=["Make a move", "Quit"])
+                # ]
+                # player_command: str = inquirer.prompt(question)
+                # print(player_command)
+                # exit()
+                player_command: str = input("Enter a command ('m' for move or 'q' to quit): ");
                 if player_command not in ['m', 'q']:
                     raise ValueError("Invalid player_command")
             except ValueError as error:

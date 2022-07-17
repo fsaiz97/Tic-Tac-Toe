@@ -12,7 +12,7 @@ def is_line_empty(line_element):
 def is_line_win(line: numpy.typing.ArrayLike) -> bool:
     """Placeholder docstring"""
     if numpy.all(numpy.equal(line, line[0])):  # checks if all the marks in the line are equal
-        return is_line_empty(line[0])
+        return not is_line_empty(line[0])
 
 
 def is_win(game_board: GameBoard) -> bool:

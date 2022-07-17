@@ -5,7 +5,8 @@ import pygame
 from game_logic_classes import Game, PlayerHuman, PlayerAI
 from game_logic_constants import Tile
 from game_logic_functions import is_win
-from pygame_functions import draw_grid
+from pygame_classes import TileSet
+from pygame_functions import draw_grid, get_grid_pos
 
 Coordinate = Tuple[int, int]
 
@@ -20,6 +21,15 @@ def main() -> None:
     # pygame setup
     display_width = 600
     display_height = 600
+    number_of_divisions = 3
+    cell_width = display_width // 3
+    cell_height = display_height // 3
+    cell_dims = cell_width, cell_height
+    file = "tileset.png"
+    tile_size = 34
+    margin = 1
+    tile_set = TileSet(file, tile_size, cell_dims, margin)
+
 
     # pygame initialization starts
     pygame.init()
@@ -34,8 +44,8 @@ def main() -> None:
     # pygame initialization ends
 
     # choose between cli game loop and pygame game loop
-    running = True
-    running_pygame = False
+    running = False
+    running_pygame = True
 
     # pygame loop
     while running_pygame:
@@ -46,10 +56,11 @@ def main() -> None:
                 running_pygame = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
-                test_rect_height = test_rect_width = 20
-                rect = pygame.Rect(*mouse_position, test_rect_width, test_rect_height)
-                rect_outline_thickness = 1
-                pygame.draw.rect(display_surface, pygame.Color("Black"), rect, rect_outline_thickness)
+                grid_pos = get_grid_pos(cell_width, cell_height, mouse_position)
+                cell_start_corner = grid_pos[0]*cell_width, grid_pos[1]*cell_height
+                tile = tile_set.tiles[1]
+                tile = pygame.transform.scale(tile, cell_dims)
+                display_surface.blit(tile, cell_start_corner)
 
             pygame.display.flip()
 
