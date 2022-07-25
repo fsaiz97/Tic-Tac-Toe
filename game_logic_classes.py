@@ -4,7 +4,7 @@ import itertools
 
 import numpy
 import numpy.typing
-import inquirer
+# import inquirer
 
 from game_logic_constants import Tile, BOARD_SIZE
 
