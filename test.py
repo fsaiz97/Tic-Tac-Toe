@@ -1,6 +1,6 @@
 import unittest
 
-from game_logic_classes import Coordinate, Game
+from game_logic_classes import Coordinate
 
 
 class TestCoordinate(unittest.TestCase):

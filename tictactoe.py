@@ -4,8 +4,8 @@ import pygame
 
 from game_logic_classes import Game, PlayerHuman, PlayerAI
 from game_logic_constants import Tile
-from game_logic_functions import is_win
-from pygame_classes import TileSet
+from game_logic_functions import get_game_window_size, is_win
+from pygame_classes import TileSet, GameWindow
 from pygame_functions import draw_grid, get_grid_pos
 
 Coordinate = Tuple[int, int]
@@ -14,31 +14,32 @@ Coordinate = Tuple[int, int]
 def main() -> None:
     """Placeholder docstring"""
 
-    player_1 = PlayerHuman("Human", Tile.PLAYER_1)
-    player_2 = PlayerAI("AI", Tile.PLAYER_2)
-    game = Game(player_1, player_2)
+    pygame.init()
+
+    player_a = PlayerHuman("Human", Tile.PLAYER_1)
+    player_b = PlayerAI("AI", Tile.PLAYER_2)
+    game = Game(player_a, player_b)
 
     # pygame setup
-    display_width = 600
-    display_height = 600
+    display_width, display_height = get_game_window_size()
+    game_window = GameWindow(display_width, display_height)
+
     number_of_divisions = 3
-    cell_width = display_width // 3
-    cell_height = display_height // 3
+    cell_width = display_width // number_of_divisions
+    cell_height = display_height // number_of_divisions
     cell_dims = cell_width, cell_height
     file = "tileset.png"
     tile_size = 34
     margin = 1
     tile_set = TileSet(file, tile_size, cell_dims, margin)
 
-
     # pygame initialization starts
-    pygame.init()
 
-    display_surface = pygame.display.set_mode((display_width, display_height))
+    #display_surface = pygame.display.set_mode((display_width, display_height))
     pygame.display.set_caption("Tic-Tac-Toe")
-    display_surface.fill(pygame.Color("White"))
+    game_window.display_surface.fill(pygame.Color("White"))
 
-    draw_grid(display_surface, pygame.Color("Black"))
+    draw_grid(game_window.display_surface, pygame.Color("Black"))
 
     pygame.display.flip()
     # pygame initialization ends
@@ -60,7 +61,7 @@ def main() -> None:
                 cell_start_corner = grid_pos[0]*cell_width, grid_pos[1]*cell_height
                 tile = tile_set.tiles[1]
                 tile = pygame.transform.scale(tile, cell_dims)
-                display_surface.blit(tile, cell_start_corner)
+                game_window.display_surface.blit(tile, cell_start_corner)
 
             pygame.display.flip()
 

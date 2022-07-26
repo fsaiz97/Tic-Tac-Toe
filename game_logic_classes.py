@@ -142,7 +142,7 @@ class PlayerHuman(Player):
                 # player_command: str = inquirer.prompt(question)
                 # print(player_command)
                 # exit()
-                player_command: str = input("Enter a command ('m' for move or 'q' to quit): ");
+                player_command: str = input("Enter a command ('m' for move or 'q' to quit): ")
                 if player_command not in ['m', 'q']:
                     raise ValueError("Invalid player_command")
             except ValueError as error:

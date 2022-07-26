@@ -5,6 +5,13 @@ from game_logic_classes import GameBoard
 from game_logic_constants import Tile
 
 
+def get_game_window_size():
+    display_width = 600
+    display_height = 600
+
+    return display_width, display_height
+
+
 def is_line_empty(line_element):
     return line_element == Tile.EMPTY
 

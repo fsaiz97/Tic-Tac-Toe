@@ -10,6 +10,7 @@ def draw_grid(surface, colour, number_of_divisions=3, gridlines_width=1):
             rect = pygame.Rect(horizontal_position, vertical_position, cell_height, cell_width)
             pygame.draw.rect(surface, colour, rect, gridlines_width)
 
+
 def get_grid_pos(cell_width, cell_height, mouse_pos):
 
     return mouse_pos[0] // cell_width, mouse_pos[1] // cell_height

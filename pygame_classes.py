@@ -5,6 +5,15 @@ import pygame
 MouseClickStates = Tuple[bool, bool, bool]  # type for the tuple returned by pygame.mouse.get_pressed()
 
 
+class GameWindow:
+    """Window for displaying the game in, along with control mechanisms relating to the game."""
+
+    def __init__(self, window_width, window_height):
+        self.display_surface = pygame.display.set_mode((window_width, window_height))
+        pygame.display.set_caption("Tic-Tac-Toe")
+        self.display_surface.fill(pygame.Color("White"))
+
+
 class Button(pygame.sprite.Sprite):
     """Basic button class that activates when clicked"""
 
