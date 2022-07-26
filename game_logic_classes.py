@@ -93,7 +93,7 @@ class Player:
 
     # noinspection PyMethodMayBeStatic
     def make_move(self) -> Coordinate:
-        return Coordinate(random.randrange(BOARD_SIZE), random.randrange(BOARD_SIZE))
+        pass
 
     def get_move(self):
         return self.make_move()
@@ -154,15 +154,16 @@ class PlayerHuman(Player):
 
 class PlayerAI(Player):
     """Class for AI player who uses an algorithm to play."""
-    pass
+    def make_move(self) -> Coordinate:
+        return Coordinate(random.randrange(BOARD_SIZE), random.randrange(BOARD_SIZE))
 
 
 class Game:
     """Represents individual game rounds, storing all information about that round."""
 
-    def __init__(self, player_1: Player, player_2: Player):
+    def __init__(self, player_1: Player, player_2: Player, board_size: int = 3):
         # Initializes a game board
-        self.board = GameBoard(BOARD_SIZE)
+        self.board = GameBoard(board_size)
         # Initializes players
         self.player_list = [player_1, player_2]
         self.player_order = self.set_player_order()

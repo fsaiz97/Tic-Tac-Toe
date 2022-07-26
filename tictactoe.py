@@ -33,16 +33,9 @@ def main() -> None:
     margin = 1
     tile_set = TileSet(file, tile_size, cell_dims, margin)
 
-    # pygame initialization starts
-
-    #display_surface = pygame.display.set_mode((display_width, display_height))
-    pygame.display.set_caption("Tic-Tac-Toe")
-    game_window.display_surface.fill(pygame.Color("White"))
-
     draw_grid(game_window.display_surface, pygame.Color("Black"))
 
     pygame.display.flip()
-    # pygame initialization ends
 
     # choose between cli game loop and pygame game loop
     running = False
