@@ -1,5 +1,5 @@
 from typing import Tuple
-import sys, os
+import os
 
 import pygame
 
@@ -8,10 +8,9 @@ from game_logic_constants import Tile
 from game_logic_functions import get_game_window_size, is_win
 from pygame_classes import TileSet, GameWindow
 from pygame_functions import draw_grid, get_grid_pos
+from general_functions import get_current_root_directory
 
 Coordinate = Tuple[int, int]
-
-os.chdir(sys._MEIPASS)
 
 
 def main() -> None:
@@ -31,10 +30,11 @@ def main() -> None:
     cell_width = display_width // number_of_divisions
     cell_height = display_height // number_of_divisions
     cell_dims = cell_width, cell_height
-    file = "tileset.png"
+    tileset_file_name = "tileset.png"
+    tileset_file_path = os.path.join(get_current_root_directory(), tileset_file_name)
     tile_size = 34
     margin = 1
-    tile_set = TileSet(file, tile_size, cell_dims, margin)
+    tile_set = TileSet(tileset_file_path, tile_size, cell_dims, margin)
 
     draw_grid(game_window.display_surface, pygame.Color("Black"))
 
