@@ -8,10 +8,19 @@ MouseClickStates = Tuple[bool, bool, bool]  # type for the tuple returned by pyg
 class GameWindow:
     """Window for displaying the game in, along with control mechanisms relating to the game."""
 
-    def __init__(self, window_width, window_height):
+    def __init__(self, window_width, window_height, cell_width, cell_height):
         self.display_surface = pygame.display.set_mode((window_width, window_height))
         pygame.display.set_caption("Tic-Tac-Toe")
         self.display_surface.fill(pygame.Color("White"))
+
+        self.cell_width = cell_width
+        self.cell_height = cell_height
+
+    def get_width(self):
+        return self.display_surface.get_width()
+
+    def get_height(self):
+        return self.display_surface.get_height()
 
 
 class Button(pygame.sprite.Sprite):
@@ -54,16 +63,15 @@ class Grid(pygame.sprite.Sprite):
 
 
 class TileSet:
-    def __init__(self, file, tile_size, cell_dims, margin):
+    def __init__(self, file, tile_size, margin):
         self.margin = margin
         self.image = pygame.image.load(file)
         self.rect = self.image.get_rect()
         self.size = tile_size
         self.tiles = []
-        self.load_tiles(cell_dims)
+        self.load_tiles()
 
-    def load_tiles(self, cell_dims):
-
+    def load_tiles(self):
         for x in range(0, self.rect.width, self.size):
             tile = pygame.Surface((self.size, self.size))
             tile.blit(self.image, (0, 0), (x, 0, self.size, self.size))

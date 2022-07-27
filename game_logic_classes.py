@@ -169,6 +169,9 @@ class Game:
         self.player_order = self.set_player_order()
         self.player_current = self.get_next_player()
 
+    def get_number_of_partitions(self):
+        return self.board.size
+
     def set_player_order(self):
         random.shuffle(self.player_list)
         return itertools.cycle(self.player_list)

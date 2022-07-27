@@ -1,8 +1,15 @@
 import numpy
 import numpy.typing
 
-from game_logic_classes import GameBoard
+from game_logic_classes import GameBoard, PlayerHuman, PlayerAI, Game
 from game_logic_constants import Tile
+
+
+def initialize_game():
+    player_a = PlayerHuman("Human", Tile.PLAYER_1)
+    player_b = PlayerAI("AI", Tile.PLAYER_2)
+
+    return Game(player_a, player_b)
 
 
 def get_game_window_size():

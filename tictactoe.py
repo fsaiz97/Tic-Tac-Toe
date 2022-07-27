@@ -1,14 +1,10 @@
 from typing import Tuple
-import os
 
 import pygame
 
-from game_logic_classes import Game, PlayerHuman, PlayerAI
-from game_logic_constants import Tile
-from game_logic_functions import get_game_window_size, is_win
-from pygame_classes import TileSet, GameWindow
-from pygame_functions import draw_grid, get_grid_pos
-from general_functions import get_current_root_directory
+from game_logic_functions import initialize_game, is_win
+from pygame_functions import initialize_game_window, draw_grid, get_grid_pos
+from general_functions import load_tiles
 
 Coordinate = Tuple[int, int]
 
@@ -16,25 +12,17 @@ Coordinate = Tuple[int, int]
 def main() -> None:
     """Placeholder docstring"""
 
+    # initialize game, display and players
     pygame.init()
-
-    player_a = PlayerHuman("Human", Tile.PLAYER_1)
-    player_b = PlayerAI("AI", Tile.PLAYER_2)
-    game = Game(player_a, player_b)
+    game = initialize_game()
+    game_window = initialize_game_window(game.get_number_of_partitions())
+    # start game
+    # event loop: react to mouse clicks, exit on clicking exit button or closing window
+    # clean up game
 
     # pygame setup
-    display_width, display_height = get_game_window_size()
-    game_window = GameWindow(display_width, display_height)
 
-    number_of_divisions = 3
-    cell_width = display_width // number_of_divisions
-    cell_height = display_height // number_of_divisions
-    cell_dims = cell_width, cell_height
-    tileset_file_name = "tileset.png"
-    tileset_file_path = os.path.join(get_current_root_directory(), tileset_file_name)
-    tile_size = 34
-    margin = 1
-    tile_set = TileSet(tileset_file_path, tile_size, cell_dims, margin)
+    tile_set = load_tiles()
 
     draw_grid(game_window.display_surface, pygame.Color("Black"))
 
@@ -53,10 +41,11 @@ def main() -> None:
                 running_pygame = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
-                grid_pos = get_grid_pos(cell_width, cell_height, mouse_position)
-                cell_start_corner = grid_pos[0]*cell_width, grid_pos[1]*cell_height
+                grid_pos = get_grid_pos(game_window.cell_width, game_window.cell_height, mouse_position)
+                cell_start_corner = grid_pos[0]*game_window.cell_width, grid_pos[1]*game_window.cell_height
                 tile = tile_set.tiles[1]
-                tile = pygame.transform.scale(tile, cell_dims)
+                cell_size = (game_window.cell_width, game_window.cell_height)
+                tile = pygame.transform.scale(tile, cell_size)
                 game_window.display_surface.blit(tile, cell_start_corner)
 
             pygame.display.flip()
