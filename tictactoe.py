@@ -2,9 +2,10 @@ from typing import Tuple
 
 import pygame
 
-from game_logic_functions import initialize_game, is_win
-from pygame_functions import initialize_game_window, draw_grid, get_grid_pos
+from game_logic_functions import is_win
+from pygame_functions import get_grid_pos
 from general_functions import load_tiles
+from initialization_functions import initialize_game_window, initialize_game
 
 Coordinate = Tuple[int, int]
 
@@ -16,15 +17,10 @@ def main() -> None:
     pygame.init()
     game = initialize_game()
     game_window = initialize_game_window(game.get_number_of_partitions())
+    tile_set = load_tiles()
     # start game
     # event loop: react to mouse clicks, exit on clicking exit button or closing window
     # clean up game
-
-    # pygame setup
-
-    tile_set = load_tiles()
-
-    draw_grid(game_window.display_surface, pygame.Color("Black"))
 
     pygame.display.flip()
 

@@ -1,14 +1,11 @@
 import pygame
 
-from game_logic_functions import get_game_window_size
-from pygame_classes import GameWindow
 
+def get_game_window_size():
+    display_width = 600
+    display_height = 600
 
-def initialize_game_window(number_of_partitions):
-    display_width, display_height = get_game_window_size()
-    cell_width = display_width // number_of_partitions
-    cell_height = display_height // number_of_partitions
-    return GameWindow(display_width, display_height, cell_width, cell_height)
+    return display_width, display_height
 
 
 def draw_grid(surface, colour, number_of_divisions=3, gridlines_width=1):

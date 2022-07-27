@@ -2,6 +2,8 @@ from typing import Tuple
 
 import pygame
 
+from pygame_functions import draw_grid
+
 MouseClickStates = Tuple[bool, bool, bool]  # type for the tuple returned by pygame.mouse.get_pressed()
 
 
@@ -9,12 +11,13 @@ class GameWindow:
     """Window for displaying the game in, along with control mechanisms relating to the game."""
 
     def __init__(self, window_width, window_height, cell_width, cell_height):
+        self.cell_width = cell_width
+        self.cell_height = cell_height
+
         self.display_surface = pygame.display.set_mode((window_width, window_height))
         pygame.display.set_caption("Tic-Tac-Toe")
         self.display_surface.fill(pygame.Color("White"))
-
-        self.cell_width = cell_width
-        self.cell_height = cell_height
+        draw_grid(self.display_surface, pygame.Color("Black"))
 
     def get_width(self):
         return self.display_surface.get_width()
