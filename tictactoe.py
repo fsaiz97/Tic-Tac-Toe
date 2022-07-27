@@ -1,4 +1,5 @@
 from typing import Tuple
+import sys, os
 
 import pygame
 
@@ -9,6 +10,8 @@ from pygame_classes import TileSet, GameWindow
 from pygame_functions import draw_grid, get_grid_pos
 
 Coordinate = Tuple[int, int]
+
+os.chdir(sys._MEIPASS)
 
 
 def main() -> None:
