@@ -3,8 +3,7 @@ from typing import Tuple
 import pygame
 
 from game_logic_functions import is_win
-from pygame_functions import get_grid_pos
-from general_functions import load_tiles
+from general_functions import load_tiles, get_graphics_choice
 from initialization_functions import initialize_game_window, initialize_game
 
 Coordinate = Tuple[int, int]
@@ -22,16 +21,7 @@ def main() -> None:
 
     # choose between cli game loop and pygame game loop
 
-    while True:
-        graphics_choice = input("Do you want graphics? (Y/y/N/n)\n").lower()
-        if graphics_choice not in ['y', 'n']:
-            print("Invalid choice, Please try again.\n")
-        elif graphics_choice == 'y':
-            graphics_on = True
-            break
-        else:
-            graphics_on = False
-            break
+    graphics_on = get_graphics_choice()
 
     running = True
 
@@ -49,12 +39,11 @@ def main() -> None:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_position = pygame.mouse.get_pos()
-                    grid_pos = get_grid_pos(game_window.cell_width, game_window.cell_height, mouse_position)
-                    cell_start_corner = grid_pos[0]*game_window.cell_width, grid_pos[1]*game_window.cell_height
+                    grid_pos = game_window.get_grid_pos(mouse_position)
+                    cell_start_corner = game_window.get_cell_top_left_point(grid_pos)
+
                     tile = tile_set.tiles[1]
-                    cell_size = (game_window.cell_width, game_window.cell_height)
-                    tile = pygame.transform.scale(tile, cell_size)
-                    game_window.display_surface.blit(tile, cell_start_corner)
+                    game_window.place_tile(cell_start_corner, tile)
 
                 pygame.display.flip()
     else:

@@ -25,6 +25,17 @@ class GameWindow:
     def get_height(self):
         return self.display_surface.get_height()
 
+    def get_grid_pos(self, mouse_pos):
+        return mouse_pos[0] // self.cell_width, mouse_pos[1] // self.cell_height
+
+    def get_cell_top_left_point(self, grid_pos):
+        return grid_pos[0] * self.cell_width, grid_pos[1] * self.cell_height
+
+    def place_tile(self, cell_start_corner, tile):
+        cell_size = (self.cell_width, self.cell_height)
+        tile = pygame.transform.scale(tile, cell_size)
+        self.display_surface.blit(tile, cell_start_corner)
+
 
 class Button(pygame.sprite.Sprite):
     """Basic button class that activates when clicked"""
