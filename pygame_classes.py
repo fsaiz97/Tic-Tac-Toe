@@ -63,7 +63,7 @@ class Grid(pygame.sprite.Sprite):
         button_pixel_width = self.pixel_width // number_of_columns
         button_pixel_height = self.pixel_height // number_of_rows
         self.button_array = [[Button(button_pixel_width, button_pixel_height, pygame.Color("Red"))
-                              for j in range(0, number_of_columns)] for i in range(0, number_of_rows)]
+                              for _ in range(0, number_of_columns)] for _ in range(0, number_of_rows)]
         self.surface = pygame.Surface((self.pixel_width, pixel_height))
         self.surface.fill(pygame.Color("White"))
 

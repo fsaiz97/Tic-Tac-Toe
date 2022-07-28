@@ -44,7 +44,7 @@ class GameBoard:
     def __init__(self, size: int) -> None:
         """Placeholder docstring"""
         self.size: int = size
-        self.board: numpy.typing.ArrayLike = numpy.full((self.size, self.size), Tile.EMPTY, dtype=object)
+        self.board: numpy.typing.NDArray = numpy.full((self.size, self.size), Tile.EMPTY, dtype=object)
 
     def __str__(self) -> str:
         """Placeholder docstring"""
@@ -120,10 +120,9 @@ class PlayerHuman(Player):
                 except ValueError as error:
                     print(error)
                 else:
-                    break
+                    return player_move
         elif player_command == 'q':
             exit("Quitting game...")
-        return player_move
 
     def make_move(self) -> Coordinate:
         user_input = self.get_move_input()
