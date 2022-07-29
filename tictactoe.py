@@ -1,26 +1,17 @@
-from typing import Tuple
-
 import pygame
 
 from game_logic_functions import is_win
 from general_functions import load_tiles, get_graphics_choice
 from initialization_functions import initialize_game_window, initialize_game
 
-Coordinate = Tuple[int, int]
-
 
 def main() -> None:
     """Placeholder docstring"""
 
-    # initialize game and players
     pygame.init()
     game = initialize_game()
-    # start game
-    # event loop: react to mouse clicks, exit on clicking exit button or closing window
-    # clean up game
 
     # choose between cli game loop and pygame game loop
-
     graphics_on = get_graphics_choice()
 
     running = True
@@ -30,12 +21,9 @@ def main() -> None:
         game_window = initialize_game_window(game.get_number_of_partitions())
         tile_set = load_tiles()
 
-        # pygame loop
         while running:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    running = False
-                elif event.type == pygame.QUIT:
+                if (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) or event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_position = pygame.mouse.get_pos()
@@ -47,7 +35,6 @@ def main() -> None:
 
                 pygame.display.flip()
     else:
-        # game loop
         while running:
             player_move = game.player_current.get_move()
 
