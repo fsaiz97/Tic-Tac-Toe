@@ -2,6 +2,7 @@ from typing import Tuple
 
 import pygame
 
+from game_logic_classes import Coordinate
 from pygame_functions import draw_grid
 
 MouseClickStates = Tuple[bool, bool, bool]  # type for the tuple returned by pygame.mouse.get_pressed()
@@ -26,10 +27,10 @@ class GameWindow:
         return self.display_surface.get_height()
 
     def get_grid_pos(self, mouse_pos):
-        return mouse_pos[0] // self.cell_width, mouse_pos[1] // self.cell_height
+        return Coordinate(mouse_pos[0] // self.cell_width, mouse_pos[1] // self.cell_height)
 
     def get_cell_top_left_point(self, grid_pos):
-        return grid_pos[0] * self.cell_width, grid_pos[1] * self.cell_height
+        return grid_pos.x * self.cell_width, grid_pos.y * self.cell_height
 
     def place_tile(self, cell_start_corner, tile):
         cell_size = (self.cell_width, self.cell_height)

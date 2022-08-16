@@ -172,7 +172,7 @@ class Game:
         return self.board.size
 
     def set_player_order(self):
-        random.shuffle(self.player_list)
+        # random.shuffle(self.player_list)
         return itertools.cycle(self.player_list)
 
     def get_next_player(self):

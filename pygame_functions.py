@@ -16,3 +16,11 @@ def draw_grid(surface, colour, number_of_divisions=3, gridlines_width=1):
         for horizontal_position in range(0, surface.get_width(), cell_width):
             rect = pygame.Rect(horizontal_position, vertical_position, cell_height, cell_width)
             pygame.draw.rect(surface, colour, rect, gridlines_width)
+
+
+def display_win_text(window, winner):
+    font = pygame.font.Font(None, 30)
+    text = font.render(winner + " wins!", True, (255, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = (window.get_width()//2, window.get_height()//2)
+    window.display_surface.blit(text, text_rect)
